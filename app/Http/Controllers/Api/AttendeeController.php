@@ -67,9 +67,8 @@ class AttendeeController extends Controller
      */
     public function destroy(Event $event , Attendee $attendee)
     {
-        $this->authorize('delete-attendee',[$event,$attendee]);
+        // $this->authorize('delete-attendee',[$event,$attendee]);
         $attendee->delete();
-
         return response(status:204);
     }
 }
