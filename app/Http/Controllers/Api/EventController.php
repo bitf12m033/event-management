@@ -18,8 +18,13 @@ class EventController extends Controller
 
     public function __construct(){
         $this->middleware('auth:sanctum')->except(['index','show']);
+
+        // Rate Limit
         // $this->middleware('throttle:60,1')->only(['store','destroy' ,'update']);
+        // $this->middleware('throttle:60,1')
         $this->middleware('throttle:api')->only(['store','destroy' ,'update']);
+        
+        //Policy 
         $this->authorizeResource(Event::class , 'event');
     }
     /**
@@ -46,11 +51,11 @@ class EventController extends Controller
         $event = Event::create([
             ...$request->validate([
                 'name' => 'required|string|max:255',
-                'description' => 'string',
+                'description' => 'nullable|string',
                 'start_time' =>'required|date',
                 'end_time' =>'required|date|after:start_time',
             ]),
-            'user_id' => $request->user()->id
+            'user_id' => $request->user()->id //1
         ]);
 
         return new EventResource($this->loadRelationships($event));
@@ -79,7 +84,7 @@ class EventController extends Controller
 
         $event->update($request->validate([
             'name' => 'sometimes|string|max:255',
-            'description' => 'string',
+            'description' => 'nullable|string',
             'start_time' =>'required|date',
             'end_time' =>'required|date|after:start_time',
         ]));

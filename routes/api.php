@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('events',EventController::class);
 Route::apiResource('events.attendees',AttendeeController::class)
     ->scoped()->except(['update'])
-;//->scoped(['attendee' => 'event']);
+;//->scoped(['attendee' => 'event']); //php artisan route:list
 
 Route::post('/login' ,[AuthController::class ,'login']);
 Route::post('/logout' ,[AuthController::class ,'logout'])->middleware(['auth:sanctum']);
