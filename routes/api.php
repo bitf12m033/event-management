@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\AttendeeController;
-
+use App\Http\Controllers\Api\LevelController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,5 +27,8 @@ Route::apiResource('events.attendees',AttendeeController::class)
     ->scoped()->except(['update'])
 ;//->scoped(['attendee' => 'event']); //php artisan route:list
 
+
+
+Route::apiResource('levels', LevelController::class);
 Route::post('/login' ,[AuthController::class ,'login']);
 Route::post('/logout' ,[AuthController::class ,'logout'])->middleware(['auth:sanctum']);
