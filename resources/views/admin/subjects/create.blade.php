@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <form action="{{ route('admin.subjects.store') }}" method="POST">
+                            <form action="{{ route('admin.subjects.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="col-sm-6">
@@ -64,6 +64,41 @@
                                                 @endforeach
                                             </select>
                                             @error('class_id')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="MainImage">Main Image <span class="text-danger">*</span></label>
+                                            <input type="file" class="form-control @error('main_image') is-invalid @enderror" id="MainImage" name="main_image" required>
+                                            @error('main_image')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="SecondaryImages">Secondary Images</label>
+                                            <input type="file" class="form-control @error('secondary_images.*') is-invalid @enderror" id="SecondaryImages" name="secondary_images[]" multiple>
+                                            @error('secondary_images.*')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="BookFile">Book File (PDF/EPUB) <span class="text-danger">*</span></label>
+                                            <input type="file" class="form-control @error('book_file') is-invalid @enderror" id="BookFile" name="book_file" required>
+                                            @error('book_file')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
