@@ -11,7 +11,7 @@ use App\Http\Controllers\SubjectController;
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::resource('levels', LevelController::class)->names('admin.levels');

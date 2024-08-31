@@ -16,6 +16,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        dd(Auth::user()?? 'No user');
         if (Auth::check() && Auth::user()->is_admin) {
             return $next($request);
         }
