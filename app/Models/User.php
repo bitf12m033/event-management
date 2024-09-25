@@ -21,7 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'phone',             // Add phone field
+        'is_phone_verified', // Add verification status
+        'otp',               // Add OTP field (if needed)
     ];
 
     /**

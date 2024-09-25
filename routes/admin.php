@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\UserController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -17,6 +18,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('levels', LevelController::class)->names('admin.levels');
     Route::resource('classes', ClassesController::class)->names('admin.classes');
     Route::resource('subjects', SubjectController::class)->names('admin.subjects');
+    Route::resource('users', UserController::class)->names('admin.users');
     Route::resource('files', FileController::class)->names('admin.files');
 });
 // Route::apiResource('levels', LevelController::class);

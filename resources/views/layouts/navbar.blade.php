@@ -16,21 +16,9 @@
 					</li>
 					<li class="pc-item pc-hasmenu">
 						<a href="#!" class="pc-link "><span class="pc-micon"><i data-feather="home"></i></span><span class="pc-mtext">Dashboard</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
-						<!-- <ul class="pc-submenu">
-							<li class="pc-item"><a class="pc-link" href="index.html">Sales</a></li>
-							<li class="pc-item"><a class="pc-link" href="dashboard-analytics.html">Analytics</a></li>
-						</ul> -->
 					</li>
 					<li class="pc-item">
 						<a href="{{ route('admin.levels.index') }}" class="pc-link"><span class="pc-micon"><i data-feather="layers"></i></span><span class="pc-mtext">Levels</span></a>
-						<!-- <ul class="pc-submenu">
-							<li class="pc-item"><a target="_blank" class="pc-link" href="layout-collapse.html">Collapse</a></li>
-							<li class="pc-item"><a target="_blank" class="pc-link" href="layout-horizontal.html">Horizontal</a></li>
-							<li class="pc-item"><a target="_blank" class="pc-link" href="layout-modern.html">Modern</a></li>
-							<li class="pc-item"><a target="_blank" class="pc-link" href="layout-advance.html">Advance</a></li>
-							<li class="pc-item"><a target="_blank" class="pc-link" href="layout-topbar.html">Topbar</a></li>
-							<li class="pc-item"><a target="_blank" class="pc-link" href="layout-tab.html">Tab</a></li>
-						</ul> -->
 					</li>
 					<li class="pc-item">
 						<a href="{{ route('admin.classes.index') }}" class="pc-link">
@@ -44,21 +32,13 @@
 							<span class="pc-mtext">Subjects</span>
 						</a>
 					</li>
-					<li class="pc-item pc-hasmenu">
-						<a href="#!" class="pc-link "><span class="pc-micon"><i data-feather="gift"></i></span><span class="pc-mtext">Widget</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
-						<ul class="pc-submenu">
-							<li class="pc-item"><a class="pc-link" href="widget-statistic.html">Statistic</a></li>
-							<li class="pc-item"><a class="pc-link" href="widget-data.html">Data</a></li>
-							<li class="pc-item"><a class="pc-link" href="widget-chart.html">Chart</a></li>
-						</ul>
-					</li>
-					<li class="pc-item pc-hasmenu">
+					<li class="pc-item pc-hasmenu {{ Request::is('admin/users*') ? 'active pc-trigger' : '' }}">
 						<a href="#!" class="pc-link "><span class="pc-micon"><i data-feather="user"></i></span><span class="pc-mtext">User</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
 						<ul class="pc-submenu">
 							<li class="pc-item"><a class="pc-link" href="user-profile.html">Profile</a></li>
 							<li class="pc-item"><a class="pc-link" href="user-profile-social.html">Social Profile</a></li>
 							<li class="pc-item"><a class="pc-link" href="user-card.html">User Card</a></li>
-							<li class="pc-item"><a class="pc-link" href="user-list.html">User List</a></li>
+							<li class="pc-item {{ Request::is('admin/users*') ? 'active' : '' }}"><a class="pc-link" href="{{ route('admin.users.index') }}">User List</a></li>
 						</ul>
 					</li>
 					<li class="pc-item pc-caption">
