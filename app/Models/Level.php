@@ -11,4 +11,8 @@ class Level extends Model
     use HasFactory, SoftDeletes;
     // protected $dates = ['deleted_at'];
     protected $fillable = ['level_name'];
+    public function classes()
+    {
+        return $this->hasMany(Classes::class);
+    }
 }

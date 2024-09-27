@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class LevelController extends Controller
 {
     public function __construct(){
-        $this->middleware('auth:sanctum')->except(['index','show']);
+        $this->middleware('auth:sanctum')->except(['index','show','filters']);
 
         $this->middleware('throttle:api')->only(['store','destroy' ,'update']);
         
@@ -68,5 +68,23 @@ class LevelController extends Controller
         $level->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function filters(){
+        $levels = Level::with(['classes.subjects'])->get();
+
+        $levelsData = $levels->map(function ($level) {
+            return [
+                'level' => $level,
+                'classes' => $level->classes->map(function ($class) {
+                    return [
+                        'class' => $class,
+                        'subjects' => $class->subjects,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json($levelsData);
     }
 }

@@ -29,6 +29,7 @@ Route::apiResource('events.attendees',AttendeeController::class)
 
 
 
+Route::get('subject-filters',[ LevelController::class,"filters"]);
 Route::apiResource('levels', LevelController::class);
 Route::post('/login' ,[AuthController::class ,'login']);
 Route::post('/signup' ,[AuthController::class ,'signup']);
