@@ -31,4 +31,5 @@ Route::apiResource('events.attendees',AttendeeController::class)
 
 Route::apiResource('levels', LevelController::class);
 Route::post('/login' ,[AuthController::class ,'login']);
+Route::post('/signup' ,[AuthController::class ,'signup']);
 Route::post('/logout' ,[AuthController::class ,'logout'])->middleware(['auth:sanctum']);
