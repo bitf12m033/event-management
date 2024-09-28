@@ -14,27 +14,30 @@ class AuthController extends Controller
 {
     try {
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+            'phoneNumber' => 'required',
+            'pin' => 'required'
         ]);
     } catch (ValidationException $e) {
         return response()->json([
+            'success' => false,
             'message' => 'Validation failed',
             'errors' => $e->errors()
-        ], 422);
+        ]);
     }
 
-    $user = User::where('email', $request->email)->first();
+    $user = User::where('phone', $request->phoneNumber)->first();
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
+    if (!$user || !Hash::check($request->pin, $user->password)) {
         return response()->json([
-            'message' => 'The provided credentials are incorrect.'
-        ], 401);
+            'message' => 'The provided credentials are incorrect.',
+            'success' => false
+        ]);
     }
 
     $token = $user->createToken('api-token')->plainTextToken;
 
     return response()->json([
+        'success' => true,
         'token' => $token,
         'user' => $user
     ]);
