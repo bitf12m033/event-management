@@ -14,7 +14,7 @@ class AuthController extends Controller
 {
     try {
         $request->validate([
-            'phoneNumber' => 'required',
+            'phone' => 'required',
             'pin' => 'required'
         ]);
     } catch (ValidationException $e) {
