@@ -11,34 +11,39 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     public function login(Request $request)
-    {
+{
+    try {
         $request->validate([
-            'email' =>'required|email',
-            'password' =>'required'
+            'phone' => 'required|exists:users,phone',
+            'pin' => 'required'
         ]);
-
-        $user = User::where('email',$request->email)->first();
-        
-        if(!$user) {
-            throw ValidationException::withMessages([
-                'email' => ['Provided credentials are incorrect']
-            ]);
-        }
-
-        if(!Hash::check($request->password , $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Passowrd is not correct']
-            ]);
-        }
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
+    } catch (ValidationException $e) {
         return response()->json([
-            'token' => $token
+            'success' => false,
+            'message' => 'Validation failed',
+            'errors' => $e->errors()
         ]);
-
-
     }
+
+    $user = User::where('phone', $request->phoneNumber)->first();
+
+    if (!$user || !Hash::check($request->pin, $user->password)) {
+        return response()->json([
+            'message' => 'Login failed.',
+            'errors' => ["pin" => ["The provided pin is incorrect."]],
+            'success' => false
+        ]);
+    }
+
+    $token = $user->createToken('api-token')->plainTextToken;
+
+    return response()->json([
+        'success' => true,
+        'token' => $token,
+        'user' => $user
+    ]);
+}
+
     public function logout(Request $request){
         $request->user()->tokens()->delete();
 
