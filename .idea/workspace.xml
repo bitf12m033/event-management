@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f64c3ca2-d7dc-4824-bae3-a23f3aa23e29" name="Changes" comment="login api">
+      <change afterPath="$PROJECT_DIR$/database/migrations/2024_10_03_142101_add_reset_token_to_users_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/AuthController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
@@ -36,7 +38,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;ILMI-3-signup-api&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;ILMI-6-reset-password&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Applications/MAMP/htdocs/event-management&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -56,6 +58,9 @@
       <updated>1727284391739</updated>
       <workItem from="1727284392761" duration="9998000" />
       <workItem from="1727374424034" duration="645000" />
+      <workItem from="1727957983977" duration="6882000" />
+      <workItem from="1728119800581" duration="2206000" />
+      <workItem from="1728469458071" duration="2259000" />
     </task>
     <task id="LOCAL-00001" summary="login api">
       <option name="closed" value="true" />

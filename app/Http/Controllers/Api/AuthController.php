@@ -25,11 +25,11 @@ class AuthController extends Controller
         ]);
     }
 
-    $user = User::where('phone', $request->phoneNumber)->first();
+    $user = User::where('phone', $request->phone)->first();
 
-    if (!$user || !Hash::check($request->pin, $user->password)) {
+    if (!$user || !Hash::check($request->pin,$user->password)) {
         return response()->json([
-            'message' => 'Login failed.',
+            'message' => $user,
             'errors' => ["pin" => ["The provided pin is incorrect."]],
             'success' => false
         ]);
@@ -49,6 +49,96 @@ class AuthController extends Controller
 
         return response()->json([
             "message" => "Successfully sign out!"
+        ]);
+    }
+    public function forgetPin(Request $request){
+         try {
+                $request->validate([
+                            'phone' => [
+                                'required',
+                                function ($attribute, $value, $fail) {
+                                    if (!User::where('phone', $value)->exists()) {
+                                        $fail('Record not found.');
+                                    }
+                                },
+                            ],
+                        ]);
+            } catch (ValidationException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors()
+                ]);
+            }
+
+  $user = User::where('phone', $request->phone)->first();
+
+    // Generate a random PIN reset token
+//     $resetToken = rand(100000, 999999);
+
+    // Save the reset token to the user or a separate table
+    $user->reset_token = '1234';
+    $user->save();
+    return response()->json([
+        'success' => true,
+        'message' => 'A reset code has been sent to your phone.'
+    ]);
+
+
+    }
+    public function verifyOtp(Request $request){
+        try {
+            $request->validate([
+               'otp' =>'required',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+               'success' => false,
+               'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ]);
+        }
+        $user = User::where('phone', $request->phone)->where('reset_token', $request->otp)->first();
+        if (!$user) {
+            return response()->json([
+               'success' => false,
+               'errors' => [['otp'=> 'Invalid otp.']]
+            ]);
+        }
+        $user->reset_token = null;
+        $user->save();
+        return response()->json([
+           'success' => true,
+           'message' => 'Reset code verified.'
+        ]);
+    }
+
+
+    public function resetPin(Request $request){
+        try {
+            $request->validate([
+               'phone' =>'required',
+               'pin' =>'required|min:4',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+               'success' => false,
+               'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ]);
+        }
+        $user = User::where('phone', $request->phone)->first();
+        if (!$user) {
+            return response()->json([
+               'success' => false,
+               'errors' => [['phone'=> 'Record not found.']]
+            ]);
+        }
+        $user->password = Hash::make($request->pin);
+        $user->save();
+        return response()->json([
+           'success' => true,
+           'message' => 'Pin reset successful.'
         ]);
     }
 }
