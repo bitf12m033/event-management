@@ -31,6 +31,11 @@ Route::apiResource('events.attendees',AttendeeController::class)
 
 Route::get('subject-filters',[ LevelController::class,"filters"]);
 Route::apiResource('levels', LevelController::class);
+
+// Auth routes
+Route::post('/reset-pin' ,[AuthController::class ,'resetPin']);
+Route::post('/verify-otp' ,[AuthController::class ,'verifyOtp']);
+Route::post('/forget-pin' ,[AuthController::class ,'forgetPin']);
 Route::post('/login' ,[AuthController::class ,'login']);
 Route::post('/signup' ,[AuthController::class ,'signup']);
 Route::post('/logout' ,[AuthController::class ,'logout'])->middleware(['auth:sanctum']);
