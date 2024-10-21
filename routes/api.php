@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\AttendeeController;
 use App\Http\Controllers\Api\LevelController;
+use App\Http\Controllers\Api\BookController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,6 +29,9 @@ Route::apiResource('events.attendees',AttendeeController::class)
 ;//->scoped(['attendee' => 'event']); //php artisan route:list
 
 
+
+Route::get('books',[ BookController::class,"getBooks"]);
+Route::get('/filter-books', [BookController::class, 'filterBooks']);
 
 Route::get('subject-filters',[ LevelController::class,"filters"]);
 Route::apiResource('levels', LevelController::class);
