@@ -14,6 +14,8 @@ class SubjectFactory extends Factory
     {
         return [
             'subject_name' => $this->faker->word,
+            'short_desc' => $this->faker->sentence,
+            'long_desc' => $this->faker->paragraph,
             'class_id' => Classes::factory(),
         ];
     }
