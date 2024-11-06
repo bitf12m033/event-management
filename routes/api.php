@@ -31,6 +31,8 @@ Route::apiResource('events.attendees',AttendeeController::class)
 
 
 Route::get('books',[ BookController::class,"getBooks"]);
+Route::get('/books/{subjectId}', [BookController::class, 'getBookDetails']);
+
 Route::get('/filter-books', [BookController::class, 'filterBooks']);
 
 Route::get('subject-filters',[ LevelController::class,"filters"]);
