@@ -10,15 +10,26 @@ use App\Models\Classes;
 
 class BookController extends Controller
 {
-    public function get1Books(){
-        $subjects = Subject::select('id', 'subject_name')->get()
-        ->map(function ($subject) {
+    public function get1Books()
+    {
+        $subjects = Subject::with(['files' => function ($query) {
+            $query->whereIn('file_type', ['main_image', 'image', 'book']);
+        }])->get()->map(function ($subject) {
+            $mainImage = $subject->files->where('file_type', 'main_image')->first();
+            $secondaryImages = $subject->files->where('file_type', 'image');
+            $book = $subject->files->where('file_type', 'book')->first();
+    
             return [
                 'id' => $subject->id,
                 'subject_name' => $subject->subject_name,
-                'src' => '/book1.png'
+                'src' => $mainImage ? asset('storage/' . $mainImage->file_path) : null,
+                'images' => $secondaryImages->map(function ($image) {
+                    return asset('storage/' . $image->file_path);
+                })->toArray(),
+                'book' => $book ? asset('storage/' . $book->file_path) : null,
             ];
-        });;
+        });
+    
         return response()->json($subjects);
     }
        public function getBooks(Request $request)
