@@ -34,9 +34,9 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
-                                        <th>Sex</th>
-                                        <th>Birth Date</th>
-                                        <th>Age</th>
+                                        <!-- <th>Sex</th> -->
+                                        <!-- <th>Birth Date</th> -->
+                                        <!-- <th>Age</th> -->
                                         <th>Created At</th>
                                         <th>Updated At</th>
                                         <th>Options</th>
@@ -52,9 +52,9 @@
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td></td>
+                                            <!-- <td></td>
                                             <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td></td> -->
                                             <td>{{ $user->created_at }}</td>
                                             <td>{{ $user->updated_at }}</td>
                                             <td>
@@ -79,6 +79,7 @@
     </div>
 
 <script>
+     
     document.addEventListener('DOMContentLoaded', function () {
         const deleteButtons = document.querySelectorAll('.delete-button');
         deleteButtons.forEach(button => {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -16,7 +17,7 @@ class UserController extends Controller
         $breadcrumbs = [
             ['title' => 'Users', 'url' => null]
         ];
-        $users = User::all();
+        $users = User::where('role', 'user')->get();
         return view('admin.users.index', compact('users', 'pageTitle', 'breadcrumbs'));
 
     }
@@ -45,7 +46,10 @@ class UserController extends Controller
             // Add any other required fields for user registration
         ]);
     
-        User::create($request->all());
+        $data = $request->all();
+        $data['password'] = Hash::make('password');
+    
+        User::create($data);
     
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     

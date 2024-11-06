@@ -115,7 +115,16 @@
             </div>
         </div>
     </div>
+
+     <!-- Required Js -->
+     <script src="{{ asset('assets/js/vendor-all.min.js')}}"></script>
+     <script src="{{ asset('assets/js/plugins/bootstrap.min.js')}}"></script>
+
+
+    <script src="{{ asset('assets/js/plugins/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('assets/js/plugins/dataTables.bootstrap4.min.js')}}"></script>
     <script>
+        $('#report-table').DataTable();
         // header option
         $('#pct-toggler').on('click', function() {
             $('.pct-customizer').toggleClass('active');
