@@ -57,14 +57,14 @@
                                     <div class="col-sm-6">
     <div class="form-group">
         <label class="floating-label" for="MainImage">Main Image</label>
-        <input type="file" class="form-control @error('main_image') is-invalid @enderror" id="MainImage" name="main_image">
+        <input type="file" class="form-control @error('main_image') is-invalid @enderror" id="MainImage" name="main_image" accept="image/png, image/jpeg">
         @error('main_image')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
         @enderror
         @if($subject->files->where('file_type', 'main_image')->first())
-            <img src="{{ asset('storage/' . $subject->files->where('file_type', 'main_image')->first()->file_path) }}" alt="Main Image" class="img-thumbnail" style="max-width: 200px;">
+            <img accept="image/png, image/jpeg" src="{{ asset('storage/' . $subject->files->where('file_type', 'main_image')->first()->file_path) }}" alt="Main Image" class="img-thumbnail" style="max-width: 200px;">
         @endif
     </div>
 </div>

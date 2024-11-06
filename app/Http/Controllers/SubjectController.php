@@ -64,7 +64,7 @@ class SubjectController extends Controller
             $mainImageFile = File::create([
                 'file_name' => $request->file('main_image')->getClientOriginalName(),
                 'file_path' => $mainImagePath,
-                'file_type' => 'image',
+                'file_type' => 'main_image',
                 'subject_id' => $subject->id, // Associate the subject ID
             ]);
         }

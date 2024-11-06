@@ -42,7 +42,13 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $subject->subject_name }}</td>
-                                        <td>{{ $subject->class->class_name }}</td>
+                                       <td>
+                                            @if($subject->class)
+                                                {{ $subject->class->class_name }}
+                                            @else
+                                                N/A
+                                            @endif
+                                       </td>
                                         <td>{{ $subject->created_at }}</td>
                                         <td>{{ $subject->updated_at }}</td>
                                         <td>
