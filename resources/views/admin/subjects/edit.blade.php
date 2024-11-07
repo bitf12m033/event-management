@@ -1,5 +1,12 @@
 <!-- resources/views/admin/subjects/edit.blade.php -->
+<?php 
+// Set PHP configurations for larger file uploads
+ini_set('upload_max_filesize', '100M');
+ini_set('post_max_size', '100M');
+ini_set('max_execution_time', '300'); // Optional: increase max execution time
+ini_set('max_input_time', '300'); // Optional: increase max input time
 
+?>
 @extends('layouts.app')
 
 @section('content')

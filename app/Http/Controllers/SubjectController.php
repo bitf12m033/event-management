@@ -41,64 +41,67 @@ class SubjectController extends Controller
 
     public function store(Request $request)
     {
-        // 
-        // // Validate the form data
-        // print($request->validate([
-        //     'subject_name' => 'required',
-        //     'class_id' => 'required',
-        //     'main_image' => 'required|image|mimes:jpeg,png,jpg',
-        //     'secondary_images.*' => 'image|mimes:jpeg,png,jpg',
-        //     'book_file' => 'required|mimes:pdf,epub',
-        // ]))
-
-        
+        // Validate the form data
+        $request->validate([
+            'subject_name' => 'required|min:3',
+            'class_id' => 'required',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
+            'secondary_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
+            'book_file' => 'nullable|mimes:pdf,epub|max:10240', // 10MB max
+        ]);
         
         // Create the subject record
         $subject = Subject::create($request->all());
         
-        // Check if the main image is available
-        if ($request->hasFile('main_image')) {
-            // dd($request->all());
-            // Store the main image
-            $mainImagePath = $request->file('main_image')->store('images');
-            $mainImageFile = File::create([
-                'file_name' => $request->file('main_image')->getClientOriginalName(),
-                'file_path' => $mainImagePath,
-                'file_type' => 'main_image',
-                'subject_id' => $subject->id, // Associate the subject ID
-            ]);
+        // Handle file uploads
+        if ($request->hasFile('main_image') || $request->hasFile('secondary_images') || $request->hasFile('book_file')) {
+            // Handle main image
+            if ($request->hasFile('main_image')) {
+                $mainImagePath = $request->file('main_image')->store('images', 'public');
+                File::create([
+                    'file_name' => $request->file('main_image')->getClientOriginalName(),
+                    'file_path' => $mainImagePath,
+                    'file_type' => 'main_image',
+                    'subject_id' => $subject->id,
+                ]);
+            }
+    
+            // Handle secondary images
+            if ($request->hasFile('secondary_images')) {
+                foreach ($request->file('secondary_images') as $image) {
+                    $secondaryImagePath = $image->store('images', 'public');
+                    File::create([
+                        'file_name' => $image->getClientOriginalName(),
+                        'file_path' => $secondaryImagePath,
+                        'file_type' => 'image',
+                        'subject_id' => $subject->id,
+                    ]);
+                }
+            }
+    
+            // Handle book file
+            if ($request->hasFile('book_file')) {
+                try {
+                    $bookFile = $request->file('book_file');
+                    $bookFilePath = $bookFile->store('books', 'public');
+                    File::create([
+                        'file_name' => $bookFile->getClientOriginalName(),
+                        'file_path' => $bookFilePath,
+                        'file_type' => 'book',
+                        'subject_id' => $subject->id,
+                    ]);
+                } catch (\Exception $e) {
+                    \Log::error('Error uploading book file: ' . $e->getMessage());
+                    return redirect()->back()->with('error', 'Error uploading book file: ' . $e->getMessage());
+                }
+            }
         }
-
-
-    // Store the secondary images
-    $secondaryImagesPaths = [];
-    if ($request->hasFile('secondary_images')) {
-        foreach ($request->file('secondary_images') as $image) {
-            $secondaryImagesPaths[] = $image->store('images');
-            $secondaryImageFile = File::create([
-                'file_name' => $image->getClientOriginalName(),
-                'file_path' => $secondaryImagesPaths[count($secondaryImagesPaths) - 1],
-                'file_type' => 'image',
-                'subject_id' => $subject->id, // Associate the subject ID
-            ]);
-        }
-    }
-
-    // Store the book file
-    if ($request->hasFile('book_file')) {
-        $bookFilePath = $request->file('book_file')->store('books');
-        $bookFile = File::create([
-            'file_name' => $request->file('book_file')->getClientOriginalName(),
-            'file_path' => $bookFilePath,
-            'file_type' => 'book',
-            'subject_id' => $subject->id, // Associate the subject ID
-        ]);
-    }  
+    
         return redirect()->route('admin.subjects.index')->with('success', 'Subject created successfully.');
     }
-
     public function edit(Subject $subject)
     {
+        
         $pageTitle = 'Edit Subject';
         $breadcrumbs = [
             ['title' => 'Home', 'url' => url('/')],
@@ -120,15 +123,22 @@ class SubjectController extends Controller
     }
 
     public function update(Request $request, Subject $subject)
-    {
+    {   
+        // Set PHP configurations for larger file uploads
+        ini_set('upload_max_filesize', '100M');
+        ini_set('post_max_size', '100M');
+        ini_set('max_execution_time', '300'); // Optional: increase max execution time
+        ini_set('max_input_time', '300'); // Optional: increase max input time
+
+      
        // Validate the form data
-        $request->validate([
-            'subject_name' => 'required',
-            'class_id' => 'required',
-            'main_image' => 'required|image|mimes:jpeg,png,jpg',
-            'secondary_images.*' => 'image|mimes:jpeg,png,jpg',
-            'book_file' => 'required|mimes:pdf|max:5000',
-        ]);
+    //    $request->validate([
+    //         'subject_name' => 'required|min:3',
+    //         'class_id' => 'required',
+    //         'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
+    //         'secondary_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
+    //         'book_file' => 'nullable|mimes:pdf,epub|max:10240', // 10MB max
+    //     ]);
 
 
     
@@ -164,13 +174,20 @@ class SubjectController extends Controller
             }
     
             if ($request->hasFile('book_file')) {
-                $bookFilePath = $request->file('book_file')->store('books','public');
-                $bookFile = File::create([
-                    'file_name' => $request->file('book_file')->getClientOriginalName(),
-                    'file_path' => $bookFilePath,
-                    'file_type' => 'book',
-                    'subject_id' => $subject->id,
-                ]);
+                try {
+                    $bookFile = $request->file('book_file');
+                    $bookFilePath = $bookFile->store('books', 'public');
+                    File::create([
+                        'file_name' => $bookFile->getClientOriginalName(),
+                        'file_path' => $bookFilePath,
+                        'file_type' => 'book',
+                        'subject_id' => $subject->id,
+                    ]);
+                } catch (\Exception $e) {
+                    var_dump($e);die();
+                    \Log::error('Error uploading book file: ' . $e->getMessage());
+                    return redirect()->back()->with('error', 'Error uploading book file: ' . $e->getMessage());
+                }
             }
     
             // Remove existing files that are not present in the form data

@@ -102,4 +102,49 @@ class BookController extends Controller
 
         return response()->json($bookDetails);
     }
+
+
+    public function unlockBook(Request $request)
+    {
+        $request->validate([
+            'subject_id' => 'required|exists:subjects,id',
+        ]);
+    
+        $user = Auth::user();
+        $subjectId = $request->subject_id;
+    
+        // Check if the book is already unlocked for the user
+        $alreadyUnlocked = DB::table('user_files')
+            ->join('files', 'user_files.file_id', '=', 'files.id')
+            ->where('user_files.user_id', $user->id)
+            ->where('files.subject_id', $subjectId)
+            ->where('files.file_type', 'book')
+            ->exists();
+    
+        if ($alreadyUnlocked) {
+            return response()->json([
+                'message' => 'Book is already unlocked for this user.',
+            ], 200);
+        }
+    
+        // Find the book file for the subject
+        $bookFile = DB::table('files')
+            ->where('subject_id', $subjectId)
+            ->where('file_type', 'book')
+            ->first();
+    
+        if (!$bookFile) {
+            return response()->json([
+                'message' => 'No book file found for this subject.',
+            ], 404);
+        }
+    
+        // Unlock the book for the user
+        $user->files()->attach($bookFile->id, ['unlocked_at' => now()]);
+    
+        return response()->json([
+            'message' => 'Book unlocked successfully.',
+            'unlocked_at' => now(),
+        ], 200);
+    }
 }

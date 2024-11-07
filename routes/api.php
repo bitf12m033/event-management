@@ -37,6 +37,7 @@ Route::get('/filter-books', [BookController::class, 'filterBooks']);
 
 Route::get('subject-filters',[ LevelController::class,"filters"]);
 Route::apiResource('levels', LevelController::class);
+Route::post('/unlock-book', [BookController::class, 'unlockBook']);
 
 // Auth routes
 Route::post('/reset-pin' ,[AuthController::class ,'resetPin']);
