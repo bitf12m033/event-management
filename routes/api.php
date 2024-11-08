@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\BookController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('/unlock-book', [BookController::class, 'unlockBook'])->middleware(['auth:sanctum']);
 
 
 Route::apiResource('events',EventController::class);
@@ -37,7 +38,6 @@ Route::get('/filter-books', [BookController::class, 'filterBooks']);
 
 Route::get('subject-filters',[ LevelController::class,"filters"]);
 Route::apiResource('levels', LevelController::class);
-Route::post('/unlock-book', [BookController::class, 'unlockBook']);
 
 // Auth routes
 Route::post('/reset-pin' ,[AuthController::class ,'resetPin']);

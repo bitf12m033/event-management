@@ -7,9 +7,14 @@ use Illuminate\Http\Request;
 use App\Models\Subject;
 use App\Models\Level;
 use App\Models\Classes;
-
+use App\Models\File;
+use Illuminate\Support\Facades\Auth;
 class BookController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->only('unlockBook');
+    }
     public function get1Books()
     {
         $subjects = Subject::with(['files' => function ($query) {
@@ -110,15 +115,15 @@ class BookController extends Controller
             'subject_id' => 'required|exists:subjects,id',
         ]);
     
-        $user = Auth::user();
+        $user = $request->user();
         $subjectId = $request->subject_id;
     
         // Check if the book is already unlocked for the user
-        $alreadyUnlocked = DB::table('user_files')
-            ->join('files', 'user_files.file_id', '=', 'files.id')
-            ->where('user_files.user_id', $user->id)
-            ->where('files.subject_id', $subjectId)
-            ->where('files.file_type', 'book')
+        $alreadyUnlocked = $user->files()
+            ->whereHas('subject', function ($query) use ($subjectId) {
+                $query->where('id', $subjectId);
+            })
+            ->where('file_type', 'book')
             ->exists();
     
         if ($alreadyUnlocked) {
@@ -128,8 +133,7 @@ class BookController extends Controller
         }
     
         // Find the book file for the subject
-        $bookFile = DB::table('files')
-            ->where('subject_id', $subjectId)
+        $bookFile = File::where('subject_id', $subjectId)
             ->where('file_type', 'book')
             ->first();
     
