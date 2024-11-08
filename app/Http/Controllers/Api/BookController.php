@@ -37,49 +37,62 @@ class BookController extends Controller
 
         return response()->json($subjects);
     }
-      public function getBooks(Request $request)
-{
-    $query = Subject::with(['files' => function ($query) {
-        $query->whereIn('file_type', ['main_image', 'image', 'book']);
-    }]);
+    
 
-    if ($request->has('level')) {
-        $level = Level::findOrFail($request->level);
-        $query->whereHas('class.level', function ($q) use ($level) {
-            $q->where('id', $level->id);
+    public function getBooks(Request $request)
+    {
+        $query = Subject::with(['files' => function ($query) {
+            $query->whereIn('file_type', ['main_image', 'image', 'book']);
+        }]);
+    
+        // Apply filters
+        if ($request->has('level')) {
+            $level = Level::findOrFail($request->level);
+            $query->whereHas('class.level', function ($q) use ($level) {
+                $q->where('id', $level->id);
+            });
+        }
+    
+        if ($request->has('class')) {
+            $class = Classes::findOrFail($request->class);
+            $query->whereHas('class', function ($q) use ($class) {
+                $q->where('id', $class->id);
+            });
+        }
+    
+        if ($request->has('subject')) {
+            $query->where('id', $request->subject);
+        }
+    
+        // Get the authenticated user (if any)
+        $user = Auth::guard('sanctum')->user();
+    
+        $books = $query->get()->map(function ($subject) use ($user) {
+            $mainImage = $subject->files->where('file_type', 'main_image')->first();
+            $secondaryImages = $subject->files->where('file_type', 'image');
+            $book = $subject->files->where('file_type', 'book')->first();
+    
+            $isUnlocked = false;
+            if ($user && $book) {
+                $isUnlocked = $user->files()
+                    ->where('files.id', $book->id)
+                    ->exists();
+            }
+    
+            return [
+                'id' => $subject->id,
+                'subject_name' => $subject->subject_name,
+                'src' => $mainImage ? asset('storage/' . $mainImage->file_path) : null,
+                'images' => $secondaryImages->map(function ($image) {
+                    return asset('storage/' . $image->file_path);
+                })->toArray(),
+                'book' => $book ? asset('storage/' . $book->file_path) : null,
+                'is_unlocked' => $isUnlocked,
+            ];
         });
+    
+        return response()->json($books);
     }
-
-    if ($request->has('class')) {
-        $class = Classes::findOrFail($request->class);
-        $query->whereHas('class', function ($q) use ($class) {
-            $q->where('id', $class->id);
-        });
-    }
-
-    if ($request->has('subject')) {
-        $query->where('id', $request->subject);
-    }
-
-    $books = $query->get()->map(function ($subject) {
-        $mainImage = $subject->files->where('file_type', 'main_image')->first();
-        $secondaryImages = $subject->files->where('file_type', 'image');
-        $book = $subject->files->where('file_type', 'book')->first();
-
-        return [
-            'id' => $subject->id,
-            'subject_name' => $subject->subject_name,
-            'src' => $mainImage ? asset('storage/' . $mainImage->file_path) : null,
-            'images' => $secondaryImages->map(function ($image) {
-                return asset('storage/' . $image->file_path);
-            })->toArray(),
-            'book' => $book ? asset('storage/' . $book->file_path) : null,
-        ];
-    });
-
-    return response()->json($books);
-}
-
 
     public function getBookDetails($subjectId)
     {
@@ -151,4 +164,26 @@ class BookController extends Controller
             'unlocked_at' => now(),
         ], 200);
     }
+
+
+    public function getUserBooks(Request $request)
+    {
+        $user = $request->user();
+        $unlockedBooks = $user->files()
+            ->where('file_type', 'book')
+            ->with('subject')
+            ->get()
+            ->map(function ($file) {
+                return [
+                    'id' => $file->subject->id,
+                    'subject_name' => $file->subject->subject_name,
+                    'book' => asset('storage/' . $file->file_path),
+                    'is_unlocked' => true,
+                ];
+            });
+
+        return response()->json($unlockedBooks);
+    }
+
+
 }

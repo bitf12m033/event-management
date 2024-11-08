@@ -21,8 +21,11 @@ use App\Http\Controllers\Api\BookController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/unlock-book', [BookController::class, 'unlockBook'])->middleware(['auth:sanctum']);
-
+// Protected routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/unlock-book', [BookController::class, 'unlockBook']);
+    Route::get('user-books', [BookController::class, "getUserBooks"]);
+});
 
 Route::apiResource('events',EventController::class);
 Route::apiResource('events.attendees',AttendeeController::class)
@@ -31,13 +34,8 @@ Route::apiResource('events.attendees',AttendeeController::class)
 
 
 
-Route::get('books',[ BookController::class,"getBooks"]);
-Route::get('/books/{subjectId}', [BookController::class, 'getBookDetails']);
 
-Route::get('/filter-books', [BookController::class, 'filterBooks']);
 
-Route::get('subject-filters',[ LevelController::class,"filters"]);
-Route::apiResource('levels', LevelController::class);
 
 // Auth routes
 Route::post('/reset-pin' ,[AuthController::class ,'resetPin']);
@@ -46,3 +44,10 @@ Route::post('/forget-pin' ,[AuthController::class ,'forgetPin']);
 Route::post('/login' ,[AuthController::class ,'login']);
 Route::post('/signup' ,[AuthController::class ,'signup']);
 Route::post('/logout' ,[AuthController::class ,'logout'])->middleware(['auth:sanctum']);
+
+// Public routes
+Route::get('books', [BookController::class, "getBooks"]);
+Route::get('/books/{subjectId}', [BookController::class, 'getBookDetails']);
+Route::get('/filter-books', [BookController::class, 'filterBooks']);
+Route::get('subject-filters',[ LevelController::class,"filters"]);
+Route::apiResource('levels', LevelController::class);
