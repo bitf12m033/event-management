@@ -130,6 +130,7 @@ class SubjectController extends Controller
         ini_set('max_execution_time', '300'); // Optional: increase max execution time
         ini_set('max_input_time', '300'); // Optional: increase max input time
 
+       
       
        // Validate the form data
     //    $request->validate([
