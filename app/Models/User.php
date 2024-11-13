@@ -55,4 +55,9 @@ class User extends Authenticatable
                     ->withPivot('unlocked_at')
                     ->withTimestamps();
     }
+
+    public function purchasedFiles()
+    {
+        return $this->hasMany(UserFile::class);
+    }
 }

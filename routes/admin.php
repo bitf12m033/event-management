@@ -20,6 +20,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('subjects', SubjectController::class)->names('admin.subjects');
     Route::resource('users', UserController::class)->names('admin.users');
     Route::resource('files', FileController::class)->names('admin.files');
+    Route::get('/users/{user}/purchases', [UserController::class, 'purchases'])->name('admin.users.purchases');
+    Route::post('/subjects/{subject}/toggle-lock', [SubjectController::class, 'toggleLock'])->name('admin.subjects.toggle-lock');
 });
 // Route::apiResource('levels', LevelController::class);
 

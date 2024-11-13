@@ -48,6 +48,9 @@ class SubjectController extends Controller
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
             'secondary_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
             'book_file' => 'nullable|mimes:pdf,epub|max:10240', // 10MB max
+            'price' => 'required|numeric|min:0',
+            'short_desc' => 'nullable|string|max:255',
+            'long_desc' => 'nullable|string',
         ]);
         
         // Create the subject record
@@ -124,22 +127,19 @@ class SubjectController extends Controller
 
     public function update(Request $request, Subject $subject)
     {   
-        // Set PHP configurations for larger file uploads
-        ini_set('upload_max_filesize', '100M');
-        ini_set('post_max_size', '100M');
-        ini_set('max_execution_time', '300'); // Optional: increase max execution time
-        ini_set('max_input_time', '300'); // Optional: increase max input time
-
        
       
        // Validate the form data
-    //    $request->validate([
-    //         'subject_name' => 'required|min:3',
-    //         'class_id' => 'required',
-    //         'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
-    //         'secondary_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
-    //         'book_file' => 'nullable|mimes:pdf,epub|max:10240', // 10MB max
-    //     ]);
+        $request->validate([
+            'subject_name' => 'required|min:3',
+            'class_id' => 'required',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
+            'secondary_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
+            'book_file' => 'nullable|mimes:pdf,epub|max:10240', // 10MB max
+            'price' => 'required|numeric|min:0',
+            'short_desc' => 'nullable|string|max:255',
+            'long_desc' => 'nullable|string',
+        ]);
 
 
     
@@ -206,5 +206,12 @@ class SubjectController extends Controller
         $subject->delete();
 
         return redirect()->route('admin.subjects.index')->with('success', 'Subject deleted successfully.');
+    }
+
+    
+    public function toggleLock(Subject $subject)
+    {
+        $subject->update(['is_locked' => !$subject->is_locked]);
+        return response()->json(['success' => true, 'is_locked' => $subject->is_locked]);
     }
 }

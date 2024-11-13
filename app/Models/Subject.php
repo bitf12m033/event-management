@@ -13,7 +13,7 @@ class Subject extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = ['subject_name','short_desc',
-        'long_desc', 'class_id'];
+        'long_desc','price','is_locked', 'class_id'];
 
     public function class()
     {
@@ -22,5 +22,9 @@ class Subject extends Model
     public function files()
     {
         return $this->hasMany(File::class, 'subject_id');
+    }
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('price');
     }
 }

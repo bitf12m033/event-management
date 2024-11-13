@@ -58,6 +58,9 @@
                                             <td>{{ $user->created_at }}</td>
                                             <td>{{ $user->updated_at }}</td>
                                             <td>
+                                                <a href="{{ route('admin.users.purchases', $user->id) }}" class="btn btn-primary btn-sm">
+                                                    <i class="feather icon-list"></i>&nbsp;Purchase History
+                                                </a>
                                                 <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-info btn-sm"><i class="feather icon-edit"></i>&nbsp;Edit </a>
                                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;" class="delete-form">
                                                     @csrf

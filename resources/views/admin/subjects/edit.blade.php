@@ -60,57 +60,89 @@ ini_set('max_input_time', '300'); // Optional: increase max input time
                                         </div>
                                     </div>
                                    
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="SubjectPrice">Subject Price <span class="text-danger">*</span></label>
+                                            <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="SubjectPrice" name="price" value="{{ old('price',$subject->price) }}" required>
+                                            @error('price')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="ShortDescription">Short Description</label>
+                                            <textarea class="form-control @error('short_desc') is-invalid @enderror" id="ShortDescription" name="short_desc" rows="3">{{ old('short_desc',$subject->short_desc) }}</textarea>
+                                            @error('short_desc')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="LongDescription">Long Description</label>
+                                            <textarea class="form-control @error('long_desc') is-invalid @enderror" id="LongDescription" name="long_desc" rows="5">{{ old('long_desc' , $subject->long_desc) }}</textarea>
+                                            @error('long_desc')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="MainImage">Main Image</label>
+                                            <input type="file" class="form-control @error('main_image') is-invalid @enderror" id="MainImage" name="main_image" accept="image/png, image/jpeg">
+                                            @error('main_image')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                            @if($subject->files->where('file_type', 'main_image')->first())
+                                                <img accept="image/png, image/jpeg" src="{{ asset('storage/' . $subject->files->where('file_type', 'main_image')->first()->file_path) }}" alt="Main Image" class="img-thumbnail" style="max-width: 200px;">
+                                            @endif
+                                        </div>
+                                    </div>
 
                                     <div class="col-sm-6">
-    <div class="form-group">
-        <label class="floating-label" for="MainImage">Main Image</label>
-        <input type="file" class="form-control @error('main_image') is-invalid @enderror" id="MainImage" name="main_image" accept="image/png, image/jpeg">
-        @error('main_image')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-        @if($subject->files->where('file_type', 'main_image')->first())
-            <img accept="image/png, image/jpeg" src="{{ asset('storage/' . $subject->files->where('file_type', 'main_image')->first()->file_path) }}" alt="Main Image" class="img-thumbnail" style="max-width: 200px;">
-        @endif
-    </div>
-</div>
+                                        <div class="form-group">
+                                            <label class="floating-label" for="SecondaryImages">Secondary Images</label>
+                                            <input type="file" class="form-control @error('secondary_images.*') is-invalid @enderror" id="SecondaryImages" name="secondary_images[]" multiple>
+                                            @error('secondary_images.*')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                            @if($subject->files->where('file_type', 'image')->count() > 0)
+                                                <div class="row">
+                                                    @foreach($subject->files->where('file_type', 'image') as $image)
+                                                        <div class="col-sm-3">
+                                                            <img src="{{ asset('storage/' . $image->file_path) }}" alt="Secondary Image" class="img-thumbnail" style="max-width: 100px;">
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
 
-<div class="col-sm-6">
-    <div class="form-group">
-        <label class="floating-label" for="SecondaryImages">Secondary Images</label>
-        <input type="file" class="form-control @error('secondary_images.*') is-invalid @enderror" id="SecondaryImages" name="secondary_images[]" multiple>
-        @error('secondary_images.*')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-        @if($subject->files->where('file_type', 'image')->count() > 0)
-            <div class="row">
-                @foreach($subject->files->where('file_type', 'image') as $image)
-                    <div class="col-sm-3">
-                        <img src="{{ asset('storage/' . $image->file_path) }}" alt="Secondary Image" class="img-thumbnail" style="max-width: 100px;">
-                    </div>
-                @endforeach
-            </div>
-        @endif
-    </div>
-</div>
-
-<div class="col-sm-6">
-    <div class="form-group">
-        <label class="floating-label" for="BookFile">Book File (PDF/EPUB)</label>
-        <input type="file" class="form-control @error('book_file') is-invalid @enderror" id="BookFile" name="book_file">
-        @error('book_file')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-        @if($subject->files->where('file_type', 'book')->first())
-            <a href="{{ asset('storage/' . $subject->files->where('file_type', 'book')->first()->file_path) }}" target="_blank">{{ $subject->files->where('file_type', 'book')->first()->file_name }}</a>
-        @endif
-    </div>
-</div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="BookFile">Book File (PDF/EPUB)</label>
+                                            <input type="file" class="form-control @error('book_file') is-invalid @enderror" id="BookFile" name="book_file">
+                                            @error('book_file')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                            @if($subject->files->where('file_type', 'book')->first())
+                                                <a href="{{ asset('storage/' . $subject->files->where('file_type', 'book')->first()->file_path) }}" target="_blank">{{ $subject->files->where('file_type', 'book')->first()->file_name }}</a>
+                                            @endif
+                                        </div>
+                                    </div>
 
                                     <div class="col-sm-12">
                                         <button class="btn btn-primary" type="submit">Update</button>

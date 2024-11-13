@@ -105,4 +105,26 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
+
+    /**
+     * Display the purchases of a specific user.
+     */
+   
+    public function purchases(User $user)
+    {
+        $purchases = $user->purchasedFiles()
+            ->join('files', 'user_files.file_id', '=', 'files.id')
+            ->join('subjects', 'files.subject_id', '=', 'subjects.id')
+            ->select('subjects.subject_name', 'files.file_type', 'user_files.unlocked_at')
+            ->get();
+
+        $pageTitle = 'User Purchases';
+        $breadcrumbs = [
+            ['title' => 'Users', 'url' => route('admin.users.index')],
+            ['title' => 'User Purchases', 'url' => null]
+        ];
+
+        return view('admin.users.purchase', compact('user', 'purchases', 'pageTitle', 'breadcrumbs'));
+    }
+    
 }

@@ -16,7 +16,6 @@ class File extends Model
         'file_type',
         'file_path',
         'subject_id',
-        'is_locked',
     ];
 
     public function subject()

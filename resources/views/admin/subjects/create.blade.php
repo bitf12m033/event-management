@@ -72,6 +72,39 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
+                                            <label class="floating-label" for="SubjectPrice">Subject Price <span class="text-danger">*</span></label>
+                                            <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="SubjectPrice" name="price" value="{{ old('price') }}" required>
+                                            @error('price')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="ShortDescription">Short Description</label>
+                                            <textarea class="form-control @error('short_desc') is-invalid @enderror" id="ShortDescription" name="short_desc" rows="3">{{ old('short_desc') }}</textarea>
+                                            @error('short_desc')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="floating-label" for="LongDescription">Long Description</label>
+                                            <textarea class="form-control @error('long_desc') is-invalid @enderror" id="LongDescription" name="long_desc" rows="5">{{ old('long_desc') }}</textarea>
+                                            @error('long_desc')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
                                             <label class="floating-label" for="MainImage">Main Image <span class="text-danger">*</span></label>
                                             <input type="file" class="form-control @error('main_image') is-invalid @enderror" id="MainImage" name="main_image" required>
                                             @error('main_image')
