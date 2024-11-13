@@ -32,8 +32,8 @@
                                         <th>ID</th>
                                         <th>Subject Name</th>
                                         <th>Class</th>
+                                        <th>Price</th>
                                         <th>Created At</th>
-                                        <th>Updated At</th>
                                         <th>Locked Status</th>
                                         <th>Options</th>
                                     </tr>
@@ -50,8 +50,8 @@
                                                 N/A
                                             @endif
                                        </td>
+                                       <td>{{ $subject->price }}</td>
                                         <td>{{ $subject->created_at }}</td>
-                                        <td>{{ $subject->updated_at }}</td>
                                         <td>
                                             <button class="btn btn-sm toggle-lock" data-subject-id="{{ $subject->id }}">
                                                 @if($subject->is_locked)

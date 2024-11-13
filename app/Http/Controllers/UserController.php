@@ -49,10 +49,13 @@ class UserController extends Controller
         $data = $request->all();
         $data['password'] = Hash::make('password');
     
-        User::create($data);
-    
-        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
-    
+        
+        try {
+            User::create($data);
+            return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'An error occurred while creating the user. Please try again.');
+        }
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PurchaseController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -22,6 +23,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('files', FileController::class)->names('admin.files');
     Route::get('/users/{user}/purchases', [UserController::class, 'purchases'])->name('admin.users.purchases');
     Route::post('/subjects/{subject}/toggle-lock', [SubjectController::class, 'toggleLock'])->name('admin.subjects.toggle-lock');
+    Route::get('/purchases', [PurchaseController::class, 'index'])->name('admin.purchases.index');
 });
 // Route::apiResource('levels', LevelController::class);
 
