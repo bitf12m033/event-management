@@ -139,5 +139,6 @@
             return this;
         };
     </script>
+    @yield('scripts')
 </body>
 </html>

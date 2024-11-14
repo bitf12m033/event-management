@@ -45,6 +45,23 @@ ini_set('max_input_time', '300'); // Optional: increase max input time
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
+                                            <label class="floating-label" for="Level">Level <span class="text-danger">*</span></label>
+                                            <select class="form-control @error('level_id') is-invalid @enderror" id="Level" name="level_id" required>
+                                                <option value="">Select Level</option>
+                                                @foreach($levels as $level)
+                                                <option value="{{ $level->id }}" {{ old('level_id', $subject->level_id) == $level->id ? 'selected' : '' }}>{{ $level->level_name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('level_id')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
                                             <label class="floating-label" for="Class">Class <span class="text-danger">*</span></label>
                                             <select class="form-control @error('class_id') is-invalid @enderror" id="Class" name="class_id" required>
                                                 <option value="">Select Class</option>
@@ -157,4 +174,31 @@ ini_set('max_input_time', '300'); // Optional: increase max input time
         </div>
         <!-- [ Main Content ] end -->
     </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        $('#Level').change(function() {
+            var levelId = $(this).val();
+            if(levelId) {
+                $.ajax({
+                    url: '/admin/get-classes-by-level/' + levelId,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#Class').empty();
+                        $('#Class').append('<option value="">Select Class</option>');
+                        $.each(data, function(key, value) {
+                            $('#Class').append('<option value="'+ key +'">'+ value +'</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#Class').empty();
+                $('#Class').append('<option value="">Select Class</option>');
+            }
+        });
+    });
+</script>
 @endsection

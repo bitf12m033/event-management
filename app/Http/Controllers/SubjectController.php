@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Models\Classes;
 use App\Models\File;
+use App\Models\Level;
 use Illuminate\Http\Request;
 
 class SubjectController extends Controller
@@ -30,13 +31,9 @@ class SubjectController extends Controller
             ['title' => 'Create', 'url' => null]
         ];
 
-        $classes = Classes::whereNull('deleted_at')
-            ->whereHas('level', function ($query) {
-                $query->whereNull('deleted_at');
-            })
-            ->get(); // Fetch only active classes with active levels
+        $levels = Level::whereNull('deleted_at')->get();
 
-        return view('admin.subjects.create', compact('classes', 'pageTitle', 'breadcrumbs'));
+        return view('admin.subjects.create', compact('levels', 'pageTitle', 'breadcrumbs'));
     }
 
     public function store(Request $request)
@@ -104,14 +101,15 @@ class SubjectController extends Controller
     }
     public function edit(Subject $subject)
     {
-        
         $pageTitle = 'Edit Subject';
         $breadcrumbs = [
             ['title' => 'Home', 'url' => url('/')],
             ['title' => 'Subjects', 'url' => route('admin.subjects.index')],
             ['title' => 'Edit', 'url' => null]
         ];
-
+    
+        $levels = Level::whereNull('deleted_at')->get(); // Fetch active levels
+    
         $classes = Classes::whereNull('deleted_at')
             ->whereHas('level', function ($query) {
                 $query->whereNull('deleted_at');
@@ -120,11 +118,17 @@ class SubjectController extends Controller
         
         // Eager load the related files for the subject
         $subject->load(['files' => function ($query) {
-            $query->whereIn('file_type', ['main_image','image', 'book']);
+            $query->whereIn('file_type', ['main_image', 'image', 'book']);
         }]);
-        return view('admin.subjects.edit', compact('subject', 'classes', 'pageTitle', 'breadcrumbs'));
+    
+        // Load the class and its associated level
+        $subject->load('class.level');
+    
+        // Set the level_id based on the subject's class
+        $subject->level_id = $subject->class->level_id ?? null;
+    
+        return view('admin.subjects.edit', compact('subject', 'classes', 'levels', 'pageTitle', 'breadcrumbs'));
     }
-
     public function update(Request $request, Subject $subject)
     {   
        

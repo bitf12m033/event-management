@@ -24,6 +24,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/users/{user}/purchases', [UserController::class, 'purchases'])->name('admin.users.purchases');
     Route::post('/subjects/{subject}/toggle-lock', [SubjectController::class, 'toggleLock'])->name('admin.subjects.toggle-lock');
     Route::get('/purchases', [PurchaseController::class, 'index'])->name('admin.purchases.index');
+    Route::get('/get-classes-by-level/{level}', [ClassesController::class ,'getClassesByLevel'])->name('admin.get-classes-by-level');
 });
 // Route::apiResource('levels', LevelController::class);
 

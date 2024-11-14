@@ -56,12 +56,26 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
+                                            <label class="floating-label" for="Level">Level <span class="text-danger">*</span></label>
+                                            <select class="form-control @error('level_id') is-invalid @enderror" id="Level" name="level_id" required>
+                                                <option value="">Select Level</option>
+                                                @foreach($levels as $level)
+                                                    <option value="{{ $level->id }}" {{ old('level_id') == $level->id ? 'selected' : '' }}>{{ $level->level_name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('level_id')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
                                             <label class="floating-label" for="Class">Class <span class="text-danger">*</span></label>
                                             <select class="form-control @error('class_id') is-invalid @enderror" id="Class" name="class_id" required>
                                                 <option value="">Select Class</option>
-                                                @foreach($classes as $class)
-                                                    <option value="{{ $class->id }}" {{ old('class_id') == $class->id ? 'selected' : '' }}>{{ $class->class_name }}</option>
-                                                @endforeach
                                             </select>
                                             @error('class_id')
                                                 <span class="invalid-feedback" role="alert">
@@ -152,3 +166,4 @@
         <!-- [ Main Content ] end -->
     </div>
 @endsection
+

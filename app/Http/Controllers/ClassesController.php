@@ -72,4 +72,10 @@ class ClassesController extends Controller
 
         return redirect()->route('admin.classes.index')->with('success', 'Class deleted successfully.');
     }
+
+    public function getClassesByLevel($levelId)
+    {
+        $classes = Classes::where('level_id', $levelId)->pluck('class_name', 'id');
+        return response()->json($classes);
+    }
 }
