@@ -23,16 +23,19 @@ class LevelController extends Controller
     {
         return view('admin.levels.create');
     }
-
+    
     public function store(Request $request)
     {
         $request->validate([
-            'level_name' => 'required|string|max:255|min:3',
+            'level_name' => 'required|string|max:255|unique:levels,level_name'
         ]);
-
-        Level::create($request->all());
-
-        return redirect()->route('admin.levels.index')->with('success', 'Level created successfully.');
+    
+        try {
+            Level::create($request->all());
+            return redirect()->route('admin.levels.index')->with('success', 'Level created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.levels.index')->with('error', 'Failed to create level.');
+        }
     }
 
     public function show(Level $level)

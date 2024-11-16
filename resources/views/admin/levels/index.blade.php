@@ -1,16 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
     <div class="pcoded-content">
         <!-- [ Main Content ] start -->
         <div class="row">
@@ -18,6 +8,17 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
+                    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
                         <div class="row align-items-center m-l-0">
                             <div class="col-sm-6">
                             </div>
@@ -89,7 +90,7 @@
                         </div>
                         <div class="col-sm-12">
                             <button class="btn btn-primary" type="submit">Submit</button>
-                            <button class="btn btn-danger" type="reset">Clear</button>
+                            <button class="btn btn-danger" type="reset" data-dismiss="modal" aria-label="Close">Clear</button>
                         </div>
                     </div>
                 </form>
@@ -124,4 +125,79 @@
     });
 </script>
 
+@endsection
+
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Debug: Check if session is working
+        console.log('Session data:', @json(session()->all()));
+               // Success message
+               @if(session('success'))
+            console.log('Success message:', "{{ session('success') }}");
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        @else
+            console.log('No success message in session');
+        @endif
+        
+        @if(session()->has('success'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: "{{ session()->get('success') }}",
+        showConfirmButton: false,
+        timer: 3000
+    });
+@endif
+        // Error message
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        @endif
+
+        // Validation errors
+        @if($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
+                showConfirmButton: true
+            });
+        @endif
+
+        // Delete confirmation
+        const deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const form = this.closest('form');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
 @endsection

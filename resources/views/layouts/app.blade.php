@@ -74,6 +74,8 @@
     <script src="{{ asset('assets/js/plugins/dataTables.bootstrap4.min.js')}}"></script>
     <script>
         $('#report-table').DataTable();
+        $('.dropdown-toggle').dropdown();
+
         // header option
         $('#pct-toggler').on('click', function() {
             $('.pct-customizer').toggleClass('active');

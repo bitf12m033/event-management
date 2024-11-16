@@ -1,7 +1,7 @@
 	<!-- [ Header ] start -->
 	<header class="pc-header ">
 		<div class="header-wrapper">
-			<div class="mr-auto pc-mob-drp">
+			<!-- <div class="mr-auto pc-mob-drp">
 				<ul class="list-unstyled">
 					<li class="dropdown pc-h-item">
 						<a class="pc-head-link active dropdown-toggle arrow-none mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
@@ -115,10 +115,10 @@
 						</div>
 					</li>
 				</ul>
-			</div>
+			</div> -->
 			<div class="ml-auto">
 				<ul class="list-unstyled">
-					<li class="dropdown pc-h-item">
+					<!-- <li class="dropdown pc-h-item">
 						<a class="pc-head-link dropdown-toggle arrow-none mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
 							<i data-feather="search"></i>
 						</a>
@@ -211,18 +211,18 @@
 								</table>
 							</div>
 						</div>
-					</li>
-					<li class="pc-h-item">
+					</li> -->
+					<!-- <li class="pc-h-item">
 						<a class="pc-head-link mr-0" href="#" data-toggle="modal" data-target="#notification-modal">
 							<i data-feather="bell"></i>
 							<span class="badge badge-danger pc-h-badge dots"><span class="sr-only"></span></span>
 						</a>
-					</li>
+					</li> -->
 					<li class="dropdown pc-h-item">
 						<a class="pc-head-link dropdown-toggle arrow-none mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
 							<img src="{{ asset('assets/images/user/avatar-2.jpg')}}" alt="user-image" class="user-avtar">
 							<span>
-								<span class="user-name">Joseph William</span>
+								<span class="user-name">{{ Auth::user()->name }}</span>
 								<span class="user-desc">Administrator</span>
 							</span>
 						</a>
